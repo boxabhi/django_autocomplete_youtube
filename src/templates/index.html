@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css" />
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+    <div class="container mt-5 pt-5 col-md-5">
+
+        <div id="autocomplete" class="autocomplete">
+            <input class="autocomplete-input" />
+            <ul class="autocomplete-result-list"></ul>
+        </div>
+
+    </div>
+
+
+    <script src="https://unpkg.com/@trevoreyre/autocomplete-js"></script>
+
+
+
+
+
+    <script>
+        new Autocomplete('#autocomplete', {
+
+            search: input => {
+                console.log(input)
+                const url = `/search/?address=${(input)}`
+                return new Promise(resolve => {
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            resolve(data.data)
+                        })
+                })
+            },
+
+
+            renderResult: (result, props) => {
+                console.log(props)
+        
+                let group = ''
+                if (result.index % 3 === 0) {
+                    group = `<li class="group">Group</li>`
+                }
+                return `
+      ${group}
+      <li ${props}>
+        <div class="wiki-title">
+          ${result}
+        </div>
+        
+      </li>
+    `
+            },
+
+            getResultValue: result => result,
+            onSubmit: result => {
+                window.open(`/places/?=${(result)}`)
+            }
+        })
+    </script>
+
+
+
+
+</body>
+
+</html>
